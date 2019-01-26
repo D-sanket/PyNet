@@ -23,8 +23,12 @@ class PyNet:
         inputLayer = self.layers[0]
 
         inputLayer.setData(inputData)
+        inputLayer.feedForward()
 
-        for layer in self.layers:
+        for layerNum in range(self.numLayers):
+            if layerNum == 0:
+                continue
+            layer = self.layers[layerNum]
             layer.feedForward()
 
     def backPropagate(self, targetData):
@@ -36,11 +40,19 @@ class PyNet:
             neuron.deactivate()
             error = targetData[neuronNum] - neuron.getData()
             errors[0].append(error)
+            b = neuron.getBias()
+            newBias = b - errors[0][neuronNum]*self.learningRate
+            neuron.setBias(newBias)
 
         for layerNum in range(self.numLayers-2, -1, -1):
             errors[1] = []
             layer = self.layers[layerNum]
             nxtLayer = layer.nextLayer()
+
+            for neuronNum in range(layer.length):
+                neuron = layer.getNeuron(neuronNum)
+                newBias = 0
+                neuron.setBias(newBias)
 
             for neuronNum in range(layer.length):
                 error = 0
@@ -58,8 +70,12 @@ class PyNet:
                     newWeight = weight - self.learningRate*weight*errors[0][nxtNeuronNum]
                     neuron.setWeight(nxtNeuronNum, newWeight)
 
-                b = neuron.getBias()
-                newBias = b - errors[0][nxtNeuronNum] * self.learningRate
+                newBias = neuron.getBias() + errors[1][neuronNum] * self.learningRate
+                neuron.setBias(newBias)
+
+            for neuronNum in range(layer.length):
+                neuron = layer.getNeuron(neuronNum)
+                newBias = neuron.getBias()/layer.length
                 neuron.setBias(newBias)
 
             errors[0] = errors[1]
@@ -76,3 +92,24 @@ class PyNet:
         print(msg)
         for layer in self.layers:
             layer.print()
+
+    def train(self, dataFileName, labelFileName):
+        data = open(dataFileName, "r")
+        labels = open(labelFileName, "r")
+
+        dataArray = data.readlines()
+        labelsArray = labels.readlines()
+
+        numData = len(dataArray)
+
+        for i in range(numData):
+            x, y = [int(d) for d in dataArray[i].split(" ")]
+            z = int(labelsArray[i])
+
+            self.feedForward([x, y])
+            self.backPropagate([z])
+
+            print(self.getOutput(), [x, y])
+
+        data.close()
+        labels.close()
