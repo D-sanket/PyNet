@@ -28,6 +28,33 @@ class Layer:
         for neuronNum in range(self.length):
             self.neurons[neuronNum].setData(data[neuronNum])
 
+    def getNeuron(self, index):
+        return self.neurons[index]
+
     def print(self):
+        dataString = "["
         for neuronNum in range(self.length):
-            print(str(self.neurons[neuronNum].getData())+" ")
+            dataString += str(self.neurons[neuronNum].getData())+" "
+        dataString = dataString[:-1]+"]"
+        print(dataString)
+
+    def feedForward(self):
+        nxtLayer = self.nextLayer()
+
+        if nxtLayer is None:
+            return
+
+        nxtLayerData = []
+
+        for nxtNeuronNum in range(nxtLayer.length):
+            data = 0
+            for neuronNum in range(self.length):
+                neuron = self.getNeuron(neuronNum)
+                neuron.activate()
+                data += neuron.getData() * neuron.getWeight(nxtNeuronNum)
+
+            data += nxtLayer.getNeuron(nxtNeuronNum).getBias()
+
+            nxtLayerData += [data]
+
+        nxtLayer.setData(nxtLayerData)

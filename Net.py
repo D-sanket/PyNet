@@ -21,4 +21,17 @@ class PyNet:
     def feedForward(self, inputData):
         inputLayer = self.layers[0]
 
+        self.print("Before")
+
         inputLayer.setData(inputData)
+
+        for layer in self.layers:
+            layer.feedForward()
+
+        self.print("After")
+
+
+    def print(self, msg = ""):
+        print(msg)
+        for layer in self.layers:
+            layer.print()
