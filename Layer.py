@@ -19,6 +19,9 @@ class Layer:
     def nextLayer(self):
         return self.net.getLayer(self.index+1)
 
+    def prevLayer(self):
+        return self.net.getLayer(self.index-1)
+
 
     def setData(self, data):
         if len(data) != self.length:
@@ -31,6 +34,9 @@ class Layer:
     def getNeuron(self, index):
         return self.neurons[index]
 
+    def getNeurons(self):
+        return self.neurons
+
     def print(self):
         dataString = "["
         for neuronNum in range(self.length):
@@ -42,6 +48,9 @@ class Layer:
         nxtLayer = self.nextLayer()
 
         if nxtLayer is None:
+            for neuronNum in range(self.length):
+                neuron = self.getNeuron(neuronNum)
+                neuron.activate()
             return
 
         nxtLayerData = []

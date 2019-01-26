@@ -1,6 +1,6 @@
 from random import random
 
-from Helper import sigmoid
+from Helper import sigmoid, sigmoidPrime
 
 
 class Neuron:
@@ -21,6 +21,9 @@ class Neuron:
     def setBias(self, bias):
         self.bias = bias
 
+    def setWeight(self, index, weight):
+        self.weights[index] = weight
+
     def getData(self):
         return self.data
 
@@ -32,3 +35,6 @@ class Neuron:
 
     def activate(self):
         self.data = sigmoid(self.data)
+
+    def deactivate(self):
+        self.data = sigmoidPrime(self.data)
