@@ -1,0 +1,4 @@
+
+dW = lr * hadamard(Error, dsigmoid(outputs)) * transpose(inputs)
+
+inputErrors = transpose(weights_of_input_to_output) * output_errors
