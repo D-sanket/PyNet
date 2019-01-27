@@ -1,15 +1,13 @@
-from Net import PyNet
+from PyNet import PyNet
 
 
 def main():
     structure = [2, 3, 2]
     net = PyNet(structure)
-    print(net.getOutput())
-    net.feedForward([0, 1])
-    print(net.getOutput())
-    net.backPropagate([0, 1])
-    net.feedForward([0, 1])
-    print(net.getOutput())
+    net.feedForward([1, 1])
+    print(net.weights[0][1].toArray())
+    net.backPropagate([1, 1])
+    print(net.weights[0][1].toArray())
 
 if __name__ == "__main__":
     main()

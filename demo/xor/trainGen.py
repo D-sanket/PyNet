@@ -10,9 +10,11 @@ labels = open("labels.txt", "w")
 for i in range(dataCount):
     x = randint(0, 1)
     y = randint(0, 1)
-    z = 1
+    z = -1
     if x == y:
         z = 0
+    else:
+        z = 1
 
     labels.write(str(z)+"\n")
     data.write(str(x)+" "+str(y)+"\n")
